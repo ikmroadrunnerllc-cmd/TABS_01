@@ -17,3 +17,10 @@ ios/Pods/
 ios/.symlinks/
 ios/Runner.xcworkspace/xcuserdata/
 web/build/
+
+# Claude Code / AI assistant artifacts — keep out of this repo
+.claude/
+CLAUDE.md
+.claude.json
+**/*.claude
+.aider*
