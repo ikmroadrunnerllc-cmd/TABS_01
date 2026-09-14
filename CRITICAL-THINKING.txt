@@ -1,0 +1,41 @@
+In-Class 1 v3 - Critical Thinking Answers
+
+Name: Mario Gutierrez
+GitHub: ikmroadrunnerllc-cmd
+Partner: N/A, did this one solo
+
+1. Widget Tree
+
+My app is basically Scaffold at the top, then AppBar with the TabBar in it, then the body which is a TabBarView with 4 tabs inside, then a BottomAppBar at the bottom. Each tab has its own stuff inside like a Column or a ListView. If I had to add a 5th tab I'd change the tabs list (right now it's Tab 1, Tab 2, Tab 3, Tab 4) and the length on the DefaultTabController, since that's what tells the TabBar and TabBarView how many tabs to expect. If those numbers don't match you get an error.
+
+2. Stateless vs Stateful
+
+MyApp is stateless, it just builds the MaterialApp one time and doesn't need to track anything. The tabs widget (_TabsNonScrollableDemoState) is stateful because it has to remember which tab you're on and keep the TabController alive. If you flipped them, MyApp being stateful would just be pointless extra code, but the tabs widget being stateless wouldn't work at all because there'd be no place to store the TabController or know when a tab changed.
+
+3. Controllers & Lifecycle
+
+If you never call _tabController.dispose(), the controller just stays in memory even after the screen is gone. It keeps its ticker running for animations that don't need to happen anymore. If people open/close that screen a bunch of times over hours of use, that memory just keeps building up and eventually the app gets slow or crashes. A reviewer would catch this fast because it's a well known rule that whatever you set up in initState you have to tear down in dispose.
+
+4. Declarative UI
+
+Imperative is like doing element.textContent = "clicked" in JavaScript, you're telling the computer the exact steps to change one thing. Flutter is declarative, you just say setState(() { clicked = true }) and then build() just describes what the screen should look like right now based on that variable, Flutter handles the actual redrawing. Declarative is easier for teams because everyone just needs to know what the current state is instead of tracing through a bunch of manual updates.
+
+5. Team Collaboration
+
+I didn't have a partner for this one so I just did the git workflow by myself (branch, commit, pull request, merge into main). If I did have a partner I think the hardest part would be two people editing the same file at the same time and getting merge conflicts. First day at a new job I'd just talk to my team first about who's touching what file before starting so we don't step on each other.
+
+6. Restoration Layer
+
+Say you're on Tab 3 and you switch to another app for a sec, and Android kills your app in the background to save memory. Without the RestorableInt/RestorationMixin stuff, when you come back it would just restart on Tab 1 like nothing happened. With it, the app remembers tabIndex and puts you back on Tab 3 when it reopens. Regular setState can't do this because it just lives in memory and gets wiped when the app process dies.
+
+7. Listener -> setState
+
+If you delete the setState() but keep tabIndex.value = _tabController.index, tapping tabs would still visually work because TabBar/TabBarView are already directly connected to _tabController, they don't need my widget's setState to switch tabs. But my own build() method wouldn't rebuild since nothing told it the state changed, so if I was showing tabIndex somewhere else in that build() it'd be stuck on the old value. Basically setState is what tells Flutter "hey rerun build," without it nothing tied to my State object updates.
+
+8. One list, two loops
+
+For my tabs I kept the loop for the TabBar labels but wrote each tab's content by hand for TabBarView since all 4 tabs look completely different (dialog, image/textfield, snackbar, listview). Using one shared list for something like the labels is safer against the "tabs[i] doesn't match children[i]" bug when everything is the same layout, but once each tab needs totally different widgets, writing them out separately is honestly just clearer.
+
+9. Requirements -> code
+
+The TextField I added is in Tab 2, and that's built inside the build() method (Layer 7 in the walkthrough) as part of the TabBarView's children. It has to be there and not in initState() because initState() only runs once before the first build and doesn't return any widgets, it's just for setting things up like the TabController. Anything you actually want to show on screen has to be in build() so Flutter can redraw it whenever it needs to.
