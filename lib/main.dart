@@ -7,6 +7,7 @@
 //   - TODO Full Name (Student ID: TODO)
 // ============================================================================
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // ============================================================================
 // 1. MAIN ENTRY POINT
@@ -451,74 +452,85 @@ class _EngagementPadState extends State<EngagementPad> {
     final darkShadow = widget.isDark ? Colors.black87 : const Color(0xFFA3B1C6);
     final lightShadow = widget.isDark ? const Color(0xFF2F3244) : Colors.white;
 
-    return GestureDetector(
-      onTapDown: (_) => setState(() => isPressed = true),
-      onTapUp: (_) {
-        setState(() => isPressed = false);
-        widget.onPressed();
-      },
-      onTapCancel: () => setState(() => isPressed = false),
-      child: AnimatedScale(
-        scale: isPressed ? 0.95 : 1.0,
-        duration: const Duration(milliseconds: 100),
-        child: AnimatedContainer(
+    // GestureDetector exposes no button semantics on its own, so screen
+    // readers get an explicit button node that fires the same action.
+    return Semantics(
+      button: true,
+      label: widget.label,
+      onTap: widget.onPressed,
+      excludeSemantics: true,
+      child: GestureDetector(
+        onTapDown: (_) {
+          HapticFeedback.lightImpact();
+          setState(() => isPressed = true);
+        },
+        onTapUp: (_) {
+          setState(() => isPressed = false);
+          widget.onPressed();
+        },
+        onTapCancel: () => setState(() => isPressed = false),
+        child: AnimatedScale(
+          scale: isPressed ? 0.95 : 1.0,
           duration: const Duration(milliseconds: 100),
-          width: 140,
-          height: 140,
-          decoration: BoxDecoration(
-            color: baseColor,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: isPressed
-                ? [
-                    // Pressed (sunken): small, tight shadows
-                    BoxShadow(
-                      color: darkShadow.withValues(alpha: 0.5),
-                      offset: const Offset(2, 2),
-                      blurRadius: 4,
-                    ),
-                    BoxShadow(
-                      color: lightShadow.withValues(alpha: 0.5),
-                      offset: const Offset(-2, -2),
-                      blurRadius: 4,
-                    ),
-                  ]
-                : [
-                    // Unpressed (raised): large, soft shadows
-                    BoxShadow(
-                      color: darkShadow.withValues(alpha: 0.7),
-                      offset: const Offset(8, 8),
-                      blurRadius: 16,
-                    ),
-                    BoxShadow(
-                      color: lightShadow.withValues(alpha: 0.9),
-                      offset: const Offset(-8, -8),
-                      blurRadius: 16,
-                    ),
-                  ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                widget.icon,
-                size: isPressed ? 40 : 46,
-                color: isPressed
-                    ? widget.accentColor
-                    : (widget.isDark ? Colors.white70 : Colors.black87),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                widget.label,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  letterSpacing: 1.1,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 100),
+            width: 140,
+            height: 140,
+            decoration: BoxDecoration(
+              color: baseColor,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: isPressed
+                  ? [
+                      // Pressed (sunken): small, tight shadows
+                      BoxShadow(
+                        color: darkShadow.withValues(alpha: 0.5),
+                        offset: const Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                      BoxShadow(
+                        color: lightShadow.withValues(alpha: 0.5),
+                        offset: const Offset(-2, -2),
+                        blurRadius: 4,
+                      ),
+                    ]
+                  : [
+                      // Unpressed (raised): large, soft shadows
+                      BoxShadow(
+                        color: darkShadow.withValues(alpha: 0.7),
+                        offset: const Offset(8, 8),
+                        blurRadius: 16,
+                      ),
+                      BoxShadow(
+                        color: lightShadow.withValues(alpha: 0.9),
+                        offset: const Offset(-8, -8),
+                        blurRadius: 16,
+                      ),
+                    ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  widget.icon,
+                  size: isPressed ? 40 : 46,
                   color: isPressed
                       ? widget.accentColor
-                      : (widget.isDark ? Colors.white54 : Colors.black54),
+                      : (widget.isDark ? Colors.white70 : Colors.black87),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  widget.label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    letterSpacing: 1.1,
+                    color: isPressed
+                        ? widget.accentColor
+                        : (widget.isDark ? Colors.white54 : Colors.black54),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
