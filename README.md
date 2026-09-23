@@ -13,6 +13,7 @@
 flutter pub get
 flutter run -d chrome   # or: flutter run -d linux / an Android device
 flutter test
+flutter run -d chrome -t lib/round2_bug_hunt_fixed.dart   # Round 2 fixed app
 ```
 
 ## Build Challenge
@@ -33,7 +34,11 @@ flutter test
   4. Live meter: metric badges + `LinearProgressIndicator`, updated through `setState()`.
   5. Theme switcher: dark/light toggle in the AppBar.
   6. GestureDetector: pads scale down and swap raised → sunken neomorphic shadows.
-- **Screenshot of changed UI state:** TODO (`screenshots/trending.png`)
+- **Screenshot of changed UI state** (score 11 ≥ target 10, TRENDING unlocked):
+
+  <img src="screenshots/trending_dark.png" width="260"> <img src="screenshots/trending_light.png" width="260">
+
+- **Demo:** [`evidence/TeamName-Demo.gif`](evidence/TeamName-Demo.gif)
 
 ## State Defense
 
@@ -84,3 +89,26 @@ onTapUp: (_) {
 onTapCancel: () => setState(() => isPressed = false),
 ```
 *Why:* the button now stays sunken while held, fires its action only after a completed tap, and resets safely if the touch is dragged off or cancelled.
+
+## Graduate Extension: setState() vs. ValueNotifier
+
+`setState()` is Flutter's simplest state tool. A `State` object changes its own fields inside the callback, and the framework marks that element dirty and rebuilds its whole `build()` method on the next frame. That works well for this app because each piece of state has one clear owner: the root owns the theme, the screen owns the counters, and each pad owns its press flag. The cost is scope. A `setState()` call rebuilds everything under that `State`, so when the slider moves, the post card, all six badges, the four pads, and the reset button rebuild too, even though most of them didn't change. State is also tied to the widget that owns it, so sharing it with a distant widget means passing values and callbacks down through every widget in between.
+
+`ValueNotifier<T>` is a small `ChangeNotifier` built into Flutter that holds one value and notifies its listeners whenever that value is replaced. Paired with `ValueListenableBuilder`, only the builder subtree that listens to the notifier rebuilds. The widget that creates the notifier doesn't rebuild at all. That makes updates more targeted: the slider could drive a `ValueNotifier<double>`, and only the percentage label and the Slider itself would rebuild on each drag frame. Because the notifier is a plain object, it can be passed to or shared between widgets that aren't parent and child, with no extra callbacks to thread through.
+
+The tradeoffs are lifecycle and discipline. A notifier must be created in `initState()` (or owned by a long-lived object) and disposed in `dispose()`, or it leaks listeners. Mutating a field inside the value, such as adding to a list, doesn't notify anyone, which is the same "silent mutator" trap as Bug #2. You must assign a new value. For a single-screen activity like this one, `setState()` is clearer and easier to explain. `ValueNotifier` pays off when one value drives a small part of a large tree, or when several unrelated widgets need to watch the same value. It's also the building block that Provider and Riverpod are based on.
+
+Official documentation: <https://api.flutter.dev/flutter/foundation/ValueNotifier-class.html>
+
+```text
+// Pseudocode: powerLevel with ValueNotifier instead of setState()
+class ScreenState:
+  final powerLevel = ValueNotifier<double>(65.0)     // created once
+  dispose(): powerLevel.dispose()                    // avoid listener leaks
+
+  build():
+    ValueListenableBuilder(listenable: powerLevel,      // only this subtree rebuilds
+      builder: (value) => Column(
+        Text("Power: ${value.toInt()}%"),
+        Slider(value: value, onChanged: (v) => powerLevel.value = v)))  // no setState()
+```
