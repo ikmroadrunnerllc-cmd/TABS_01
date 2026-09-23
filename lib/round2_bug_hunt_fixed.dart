@@ -2,7 +2,7 @@
 // Activity 04: Round 2 State Destruction Derby (FIXED practice copy)
 // Team Name: Mario Gutierrez (individual, no teammate)
 // Members:
-//   - Mario Gutierrez (Student ID: TODO_STUDENT_ID)
+//   - Mario Gutierrez (Student ID: 002889038)
 // Run: flutter run -d chrome -t lib/round2_bug_hunt_fixed.dart
 // ============================================================================
 import 'package:flutter/material.dart';
