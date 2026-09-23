@@ -17,11 +17,10 @@ void main() {
 }
 
 // ============================================================================
-// 2. ROOT APPLICATION WIDGET (Owns Global Theme State)
+// 2. APP WIDGET (THEME)
 // ============================================================================
-// Summary: The single source of truth for light/dark mode. The theme flag is
-// lifted to this root so MaterialApp and every screen below it agree on it;
-// the screen flips it through the onToggleTheme callback.
+// Keeps track of dark/light mode. It lives here at the top so MaterialApp
+// can use it too. The screen changes it by calling onToggleTheme.
 class ViralStudioApp extends StatefulWidget {
   const ViralStudioApp({super.key});
 
@@ -49,11 +48,10 @@ class _ViralStudioAppState extends State<ViralStudioApp> {
 }
 
 // ============================================================================
-// 3. MAIN STUDIO SCREEN (Stateful Controller)
+// 3. MAIN SCREEN
 // ============================================================================
-// Summary: Holds the post's engagement counters and the trending target.
-// Every mutation goes through setState(), so the metric badges, progress
-// meter, background color, and TRENDING banner all rebuild together.
+// Holds the counters and the trending target. Every change goes through
+// setState() so the badges, progress bar, and banner all update together.
 class ContentStudioScreen extends StatefulWidget {
   final bool isDark;
   final VoidCallback onToggleTheme;
@@ -78,10 +76,10 @@ class _ContentStudioScreenState extends State<ContentStudioScreen> {
   double trendingTarget = 20; // Points needed to trend (slider-controlled)
   String lastAction = "POSTED";
 
-  // Weighted engagement score: Like 1, Comment 2, Share 3, Save 2
+  // Like 1, Comment 2, Share 3, Save 2
   int get engagementScore => likes + comments * 2 + shares * 3 + saves * 2;
 
-  // Derived rather than stored, so it can never drift out of sync with the score
+  // Worked out from the score so it always matches
   bool get isTrending => engagementScore >= trendingTarget;
 
   void _engage(String actionName, VoidCallback increment) {
@@ -140,7 +138,7 @@ class _ContentStudioScreenState extends State<ContentStudioScreen> {
             if (isTrending) const TrendingBanner(),
             if (isTrending) const SizedBox(height: 16),
 
-            // --- METRICS ROW ---
+            // --- COUNTERS ---
             Wrap(
               spacing: 12,
               runSpacing: 12,
@@ -186,7 +184,7 @@ class _ContentStudioScreenState extends State<ContentStudioScreen> {
             ),
             const SizedBox(height: 20),
 
-            // --- DYNAMIC PROGRESS METER ---
+            // --- PROGRESS BAR ---
             Text(
               "Trending progress: $engagementScore / ${trendingTarget.toInt()} pts",
               style: const TextStyle(fontWeight: FontWeight.w600),
@@ -203,7 +201,7 @@ class _ContentStudioScreenState extends State<ContentStudioScreen> {
             ),
             const SizedBox(height: 28),
 
-            // --- 2x2 GRID OF TACTILE ENGAGEMENT PADS ---
+            // --- ENGAGEMENT PADS ---
             Wrap(
               spacing: 20,
               runSpacing: 20,
@@ -269,12 +267,11 @@ class _ContentStudioScreenState extends State<ContentStudioScreen> {
 }
 
 // ============================================================================
-// 4. STATELESS PRESENTATION WIDGETS
+// 4. STATELESS WIDGETS
 // ============================================================================
-// Summary: These hold no state of their own; they render whatever the parent
-// passes in and rebuild only when the parent's setState() gives them new data.
+// These don't keep any state. They just show what the screen passes in.
 
-/// Post preview card showing the simulated post and its latest engagement.
+/// Card at the top that shows the post and the last action.
 class PostHeaderCard extends StatelessWidget {
   final bool isDark;
   final String lastAction;
@@ -335,7 +332,7 @@ class PostHeaderCard extends StatelessWidget {
   }
 }
 
-/// Small labeled counter tile for one engagement metric.
+/// Small box that shows one counter.
 class MetricBadge extends StatelessWidget {
   final String label;
   final int value;
@@ -385,7 +382,7 @@ class MetricBadge extends StatelessWidget {
   }
 }
 
-/// Banner revealed only while the post is trending.
+/// Banner that only shows up when the post is trending.
 class TrendingBanner extends StatelessWidget {
   const TrendingBanner({super.key});
 
@@ -415,12 +412,11 @@ class TrendingBanner extends StatelessWidget {
 }
 
 // ============================================================================
-// 5. CUSTOM STATEFUL TACTILE PAD
+// 5. ENGAGEMENT PAD (STATEFUL)
 // ============================================================================
-// Summary: Each pad owns its own isPressed flag, so pressing one never affects
-// the others. GestureDetector drives the full touch lifecycle: sink on down,
-// release + fire on up, release without firing on cancel. The pad scales down
-// and swaps from raised to sunken neomorphic shadows while held.
+// Each pad has its own isPressed so pressing one doesn't affect the others.
+// Touch down pushes it in, letting go runs the action, and dragging off
+// cancels it. While it's held it shrinks a little and the shadow changes.
 class EngagementPad extends StatefulWidget {
   final IconData icon;
   final String label;
@@ -452,8 +448,7 @@ class _EngagementPadState extends State<EngagementPad> {
     final darkShadow = widget.isDark ? Colors.black87 : const Color(0xFFA3B1C6);
     final lightShadow = widget.isDark ? const Color(0xFF2F3244) : Colors.white;
 
-    // GestureDetector exposes no button semantics on its own, so screen
-    // readers get an explicit button node that fires the same action.
+    // Semantics lets screen readers treat the pad as a button.
     return Semantics(
       button: true,
       label: widget.label,
@@ -481,7 +476,7 @@ class _EngagementPadState extends State<EngagementPad> {
               borderRadius: BorderRadius.circular(24),
               boxShadow: isPressed
                   ? [
-                      // Pressed (sunken): small, tight shadows
+                      // Pressed: small shadow so it looks pushed in
                       BoxShadow(
                         color: darkShadow.withValues(alpha: 0.5),
                         offset: const Offset(2, 2),
@@ -494,7 +489,7 @@ class _EngagementPadState extends State<EngagementPad> {
                       ),
                     ]
                   : [
-                      // Unpressed (raised): large, soft shadows
+                      // Not pressed: big shadow so it looks raised
                       BoxShadow(
                         color: darkShadow.withValues(alpha: 0.7),
                         offset: const Offset(8, 8),

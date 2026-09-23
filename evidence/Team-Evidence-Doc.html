@@ -2,55 +2,53 @@
 <html><head><meta charset="utf-8"><title>Activity 04 Team Evidence</title>
 <style>body{font-family:Arial,sans-serif;max-width:800px;margin:auto;line-height:1.45}pre{background:#f4f4f4;padding:8px;font-size:12px}.todo{background:#fff3b0;padding:6px}</style>
 </head><body>
-<h1>Activity 04: Flutter Widget Wars &amp; State Derby: Team Evidence</h1>
-<p><b>Team Name:</b> TODO_TEAM_NAME<br>
-<b>Members:</b> TODO Full Name (Student ID: TODO), TODO Full Name (Student ID: TODO)<br>
-<b>GitHub repository:</b> TODO_REPO_URL</p>
+<h1>Activity 04: Flutter Widget Wars &amp; State Derby</h1>
+<p>Team Name: TODO_TEAM_NAME<br>
+Members: TODO Full Name (Student ID: TODO), TODO Full Name (Student ID: TODO)<br>
+GitHub: TODO_REPO_URL</p>
 
 <h2>Round 1: Widget Identification Blitz</h2>
-<p class="todo">PASTE: final Team Score + Findings Report screenshot (TeamName-Round1-Quiz.png).</p>
+<p class="todo">Paste the final score screenshot here (TeamName-Round1-Quiz.png).</p>
 
 <h2>Round 2: State Destruction Derby</h2>
-<p>Fixed practice file: <code>lib/round2_bug_hunt_fixed.dart</code> (original <code>// 🐛 BUG #</code> markers kept next to each fix).
-Run with <code>flutter run -d chrome -t lib/round2_bug_hunt_fixed.dart</code>.</p>
+<p>Our fixed code is in lib/round2_bug_hunt_fixed.dart. We kept the original // 🐛 BUG # comments so each fix is easy to find.</p>
 
 <h3>Bug 1: Scope Failure</h3>
-<p><b>Symptom:</b> Pressing any one button sank all four buttons at once.</p>
-<pre>// Removed from _ControlDeckScreenState:  bool isPressed = false;
-class TactileButton extends StatefulWidget { ... }
+<p>Problem: pressing one button made all four buttons go down.</p>
+<pre>// removed bool isPressed = false; from _ControlDeckScreenState
 class _TactileButtonState extends State&lt;TactileButton&gt; {
-  bool isPressed = false;   // each button owns its own flag
+  bool isPressed = false;
 }</pre>
-<p><b>Why it works:</b> The press flag lived on the screen and all four buttons read it. Moving it into each button's own State means a press only rebuilds and sinks that one button.</p>
-<p class="todo">PASTE: screenshot of one button pressed while the others stay raised.</p>
+<p>Why it works: there was only one isPressed on the screen and every button used it. Now each button has its own, so only the one you press goes down.</p>
+<p class="todo">Paste screenshot: one button pressed, the others still up.</p>
 
 <h3>Bug 2: Silent Mutator</h3>
-<p><b>Symptom:</b> Dragging the slider didn't move the thumb or update the percentage.</p>
+<p>Problem: moving the slider didn't update anything on the screen.</p>
 <pre>onChanged: (newVal) =&gt; setState(() =&gt; powerLevel = newVal),</pre>
-<p><b>Why it works:</b> The old code changed <code>powerLevel</code> without calling <code>setState()</code>, so Flutter never redrew. Wrapping the assignment marks the screen dirty, so the slider, label and Energy Level card redraw.</p>
-<p class="todo">PASTE: screenshot of the slider moved with Energy Level showing the new value.</p>
+<p>Why it works: the value was changing but Flutter didn't know it needed to redraw. Putting it inside setState() makes the slider and the percentage update.</p>
+<p class="todo">Paste screenshot: slider moved and Energy Level showing the new number.</p>
 
 <h3>Bug 3: Geometry Inversion</h3>
-<p><b>Symptom:</b> Buttons popped <i>up</i> when pressed and looked flat at rest.</p>
+<p>Problem: the buttons looked like they popped up when pressed instead of going down.</p>
 <pre>boxShadow: isPressed
-    ? [ Offset(2, 2) / Offset(-2, -2), blurRadius: 4 ]    // sunken
-    : [ Offset(8, 8) / Offset(-8, -8), blurRadius: 16 ],  // raised</pre>
-<p><b>Why it works:</b> The two shadow branches were swapped. Small, tight shadows make a surface look pressed in and large, soft ones make it look raised, so swapping them back makes the button sink when pressed.</p>
-<p class="todo">PASTE: screenshot of a button mid-press looking sunken.</p>
+    ? [ Offset(2, 2), Offset(-2, -2), blurRadius 4 ]
+    : [ Offset(8, 8), Offset(-8, -8), blurRadius 16 ],</pre>
+<p>Why it works: the two shadow lists were swapped. A small shadow looks pushed in and a big shadow looks raised, so we switched them back.</p>
+<p class="todo">Paste screenshot: a button being pressed and looking pushed in.</p>
 
 <h3>Bug 4: Event Race</h3>
-<p><b>Symptom:</b> The action fired on first touch and the button never visibly stayed down.</p>
+<p>Problem: the action happened as soon as you touched the button, and the button never stayed down.</p>
 <pre>onTapDown: (_) =&gt; setState(() =&gt; isPressed = true),
 onTapUp: (_) {
   setState(() =&gt; isPressed = false);
   widget.onPressed();
 },
 onTapCancel: () =&gt; setState(() =&gt; isPressed = false),</pre>
-<p><b>Why it works:</b> <code>onTapDown</code> called both the press and release handlers, so the action fired before the user let go. Now touch-down only sinks the button, lift-up releases it and fires the action, and cancel resets it without firing.</p>
-<p class="todo">PASTE: TeamName-Round2-BugProof.png (running fixed app + editor showing the corrected lines with the // 🐛 BUG # comment + team name).</p>
+<p>Why it works: onTapDown was running both the press and the release code at once. Now touching only pushes the button down, letting go runs the action, and dragging off cancels it.</p>
+<p class="todo">Paste TeamName-Round2-BugProof.png here (app running + editor showing the fix with the // 🐛 BUG # comment + team name).</p>
 
-<h2>Round 3: Build Challenge (Viral Content Studio)</h2>
-<p>Social-post simulator: Like +1, Comment +2, Share +3, Save +2. When the engagement score reaches the trending target (slider, default 20), the background turns orange and a <b>TRENDING 🔥</b> banner appears.
-Stateless: PostHeaderCard, MetricBadge, TrendingBanner. Stateful: ViralStudioApp (theme), ContentStudioScreen (counters), EngagementPad (own press state).</p>
-<p class="todo">PASTE: screenshot of the trending state; link or attach TeamName-Demo.gif.</p>
+<h2>Round 3: Build Challenge</h2>
+<p>We made the Viral Content Studio. You can like (+1), comment (+2), share (+3), and save (+2) a post. When the score reaches the trending target (20 by default, you can change it with the slider), the background turns orange and a TRENDING 🔥 banner shows up.</p>
+<p>Stateless widgets: PostHeaderCard, MetricBadge, TrendingBanner. Stateful widgets: ViralStudioApp (theme), ContentStudioScreen (counters), EngagementPad (pressed or not).</p>
+<p class="todo">Paste the trending screenshot and attach TeamName-Demo.gif.</p>
 </body></html>
