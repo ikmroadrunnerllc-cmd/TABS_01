@@ -1,10 +1,9 @@
 // ============================================================================
 // Activity 04: Flutter Widget Wars & State Derby
 // Build Challenge Theme: Viral Content Studio
-// Team Name: TODO_TEAM_NAME
+// Team Name: Mario Gutierrez (individual, no teammate)
 // Members:
-//   - TODO Full Name (Student ID: TODO)
-//   - TODO Full Name (Student ID: TODO)
+//   - Mario Gutierrez (Student ID: TODO_STUDENT_ID)
 // ============================================================================
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

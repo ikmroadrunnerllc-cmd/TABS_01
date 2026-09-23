@@ -3,15 +3,14 @@
 <style>body{font-family:Arial,sans-serif;max-width:800px;margin:auto;line-height:1.45}pre{background:#f4f4f4;padding:8px;font-size:12px}.todo{background:#fff3b0;padding:6px}</style>
 </head><body>
 <h1>Activity 04: Flutter Widget Wars &amp; State Derby</h1>
-<p>Team Name: TODO_TEAM_NAME<br>
-Members: TODO Full Name (Student ID: TODO), TODO Full Name (Student ID: TODO)<br>
-GitHub: TODO_REPO_URL</p>
+<p>Name: Mario Gutierrez (Student ID: TODO_STUDENT_ID). I did this on my own at home, no teammate.<br>
+GitHub: https://github.com/ikmroadrunnerllc-cmd/TABS_01/tree/activity-04-widget-wars</p>
 
 <h2>Round 1: Widget Identification Blitz</h2>
-<p class="todo">Paste the final score screenshot here (TeamName-Round1-Quiz.png).</p>
+<p class="todo">Paste the final score screenshot here (MarioGutierrez-Round1-Quiz.png).</p>
 
 <h2>Round 2: State Destruction Derby</h2>
-<p>Our fixed code is in lib/round2_bug_hunt_fixed.dart. We kept the original // 🐛 BUG # comments so each fix is easy to find.</p>
+<p>My fixed code is in lib/round2_bug_hunt_fixed.dart. I kept the original // 🐛 BUG # comments so each fix is easy to find.</p>
 
 <h3>Bug 1: Scope Failure</h3>
 <p>Problem: pressing one button made all four buttons go down.</p>
@@ -33,7 +32,7 @@ class _TactileButtonState extends State&lt;TactileButton&gt; {
 <pre>boxShadow: isPressed
     ? [ Offset(2, 2), Offset(-2, -2), blurRadius 4 ]
     : [ Offset(8, 8), Offset(-8, -8), blurRadius 16 ],</pre>
-<p>Why it works: the two shadow lists were swapped. A small shadow looks pushed in and a big shadow looks raised, so we switched them back.</p>
+<p>Why it works: the two shadow lists were swapped. A small shadow looks pushed in and a big shadow looks raised, so I switched them back.</p>
 <p class="todo">Paste screenshot: a button being pressed and looking pushed in.</p>
 
 <h3>Bug 4: Event Race</h3>
@@ -45,10 +44,10 @@ onTapUp: (_) {
 },
 onTapCancel: () =&gt; setState(() =&gt; isPressed = false),</pre>
 <p>Why it works: onTapDown was running both the press and the release code at once. Now touching only pushes the button down, letting go runs the action, and dragging off cancels it.</p>
-<p class="todo">Paste TeamName-Round2-BugProof.png here (app running + editor showing the fix with the // 🐛 BUG # comment + team name).</p>
+<p class="todo">Paste MarioGutierrez-Round2-BugProof.png here (app running + editor showing the fix with the // 🐛 BUG # comment + your name).</p>
 
 <h2>Round 3: Build Challenge</h2>
-<p>We made the Viral Content Studio. You can like (+1), comment (+2), share (+3), and save (+2) a post. When the score reaches the trending target (20 by default, you can change it with the slider), the background turns orange and a TRENDING 🔥 banner shows up.</p>
+<p>I made the Viral Content Studio. You can like (+1), comment (+2), share (+3), and save (+2) a post. When the score reaches the trending target (20 by default, you can change it with the slider), the background turns orange and a TRENDING 🔥 banner shows up.</p>
 <p>Stateless widgets: PostHeaderCard, MetricBadge, TrendingBanner. Stateful widgets: ViralStudioApp (theme), ContentStudioScreen (counters), EngagementPad (pressed or not).</p>
-<p class="todo">Paste the trending screenshot and attach TeamName-Demo.gif.</p>
+<p class="todo">Paste the trending screenshot and attach MarioGutierrez-Demo.gif.</p>
 </body></html>

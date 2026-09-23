@@ -2,10 +2,9 @@
 
 ## Team Members
 
-Team Name: TODO
+Mario Gutierrez (Student ID: TODO_STUDENT_ID)
 
-- TODO Full Name (Student ID: TODO)
-- TODO Full Name (Student ID: TODO)
+I did this activity on my own at home, not in class, so there's no teammate.
 
 Google Doc: TODO link
 
@@ -25,7 +24,7 @@ flutter run -d chrome -t lib/round2_bug_hunt_fixed.dart
 
 ## Build Challenge
 
-Our theme is the Viral Content Studio. It's a fake social media post where you can like, comment, share, and save to build up points.
+My theme is the Viral Content Studio. It's a fake social media post where you can like, comment, share, and save to build up points.
 
 Points: Like = 1, Comment = 2, Share = 3, Save = 2.
 
@@ -40,7 +39,7 @@ The total score and whether the post is trending are worked out from the counter
 
 The condition: when the score reaches the trending target, the background turns orange, the progress bar turns orange, and a "TRENDING 🔥" banner shows up. The Reset Post button sets everything back to 0.
 
-How we covered each checkpoint:
+How I covered each checkpoint:
 
 1. Stateless widgets: `PostHeaderCard`, `MetricBadge`, `TrendingBanner`
 2. Custom Stateful widget: `EngagementPad`
@@ -53,23 +52,23 @@ Screenshot after it starts trending (score 11, target 10):
 
 <img src="screenshots/trending_dark.png" width="260"> <img src="screenshots/trending_light.png" width="260">
 
-Demo: [evidence/TeamName-Demo.gif](evidence/TeamName-Demo.gif)
+Demo: [evidence/MarioGutierrez-Demo.gif](evidence/MarioGutierrez-Demo.gif)
 
 ## State Defense
 
-`PostHeaderCard`, `MetricBadge`, and `TrendingBanner` are stateless. They just show whatever values they get from the screen and don't keep track of anything. `ViralStudioApp`, `ContentStudioScreen`, and `EngagementPad` are stateful because they each hold something that changes. The app holds dark/light mode, the screen holds the counters and the target, and each pad holds whether it's being pressed. We kept the pressed value inside each pad so pressing one pad doesn't affect the others. The counters are on the screen because a lot of different widgets need to show them.
+`PostHeaderCard`, `MetricBadge`, and `TrendingBanner` are stateless. They just show whatever values they get from the screen and don't keep track of anything. `ViralStudioApp`, `ContentStudioScreen`, and `EngagementPad` are stateful because they each hold something that changes. The app holds dark/light mode, the screen holds the counters and the target, and each pad holds whether it's being pressed. I kept the pressed value inside each pad so pressing one pad doesn't affect the others. The counters are on the screen because a lot of different widgets need to show them.
 
 Every change goes through `setState()`. That includes pressing a pad, moving the slider, resetting, and switching the theme. `setState()` tells Flutter something changed, so it rebuilds that widget and everything under it. When a pad is held down, only that pad rebuilds. When an action happens, the whole screen rebuilds and the badges, progress bar, and banner all get the new numbers at the same time. If you change a variable without `setState()`, the value changes but the screen doesn't update. That was Bug 2 in Round 2.
 
-The dark/light setting is stored at the top of the app in `ViralStudioApp`, because `MaterialApp` needs it too, not just the screen. The app passes `isDark` down to the screen, and the screen calls `onToggleTheme` when the button is pressed so the app can flip it. The pads work the same way. A pad doesn't know anything about points. It just calls `onPressed` when you let go, and the screen decides what that means. That way we can reuse the same pad widget for all four buttons.
+The dark/light setting is stored at the top of the app in `ViralStudioApp`, because `MaterialApp` needs it too, not just the screen. The app passes `isDark` down to the screen, and the screen calls `onToggleTheme` when the button is pressed so the app can flip it. The pads work the same way. A pad doesn't know anything about points. It just calls `onPressed` when you let go, and the screen decides what that means. That way I can reuse the same pad widget for all four buttons.
 
 ## Round 1 Findings
 
-TODO: paste the team score report from the Round 1 quiz.
+TODO: paste the score report from the Round 1 quiz.
 
 ## Round 2 Bug Fixes
 
-The full write-ups with screenshots are in our Google Doc (link at the top). The fixed code is in [lib/round2_bug_hunt_fixed.dart](lib/round2_bug_hunt_fixed.dart). We left the original `// 🐛 BUG #` comments in so you can find each fix.
+The full write-ups with screenshots are in my Google Doc (link at the top). The fixed code is in [lib/round2_bug_hunt_fixed.dart](lib/round2_bug_hunt_fixed.dart). I left the original `// 🐛 BUG #` comments in so you can find each fix.
 
 <img src="evidence/Round2-fixed-app.png" width="260">
 
@@ -107,7 +106,7 @@ boxShadow: isPressed
     : [ /* Offset(8, 8), Offset(-8, -8), blurRadius 16 */ ],
 ```
 
-Why it works: the two shadow lists were swapped. A small shadow looks pushed in and a big shadow looks raised, so we switched them back.
+Why it works: the two shadow lists were swapped. A small shadow looks pushed in and a big shadow looks raised, so I switched them back.
 
 ### Bug 4: Event Race
 
