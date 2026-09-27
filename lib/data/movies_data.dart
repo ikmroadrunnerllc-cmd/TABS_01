@@ -3,7 +3,7 @@ import '../models/movie.dart';
 List<Movie> movies = [
   Movie(
     title: 'Bad Boys: Ride or Die',
-    posterPath: 'assets/images/badboys.jpeg',
+    posterPath: 'assets/images/bad-boys-ride-or-die-movie-poster.jpg',
     cast: ['Will Smith', 'Martin Lawrence'],
     synopsis:
         'Miami detectives Mike Lowrey and Marcus Burnett try to clear the name of their late Captain Howard after he is posthumously framed for working with drug cartels.',
