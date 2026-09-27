@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/movies_data.dart';
+import 'details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,14 @@ class HomeScreen extends StatelessWidget {
           return ListTile(
             leading: Image.asset(movie.posterPath, width: 50),
             title: Text(movie.title),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DetailsScreen(movie: movie),
+                ),
+              );
+            },
           );
         },
       ),
