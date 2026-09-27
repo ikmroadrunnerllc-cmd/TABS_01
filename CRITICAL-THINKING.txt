@@ -1,0 +1,109 @@
+CW-02 Flutter Movie Watchlist — Critical Thinking Reflections
+
+1. Navigation
+My app uses Flutter's Navigator to move between two screens: HomeScreen and
+DetailsScreen. When a user taps a movie in the ListView on HomeScreen, the
+onTap callback on that ListTile calls Navigator.push with a
+MaterialPageRoute. The route's builder function creates a new DetailsScreen
+widget and passes it the tapped movie. Because DetailsScreen is pushed onto
+a stack, the built-in back button in the AppBar automatically returns the
+user to HomeScreen without any extra code. This stack-based model means I
+never have to manually track which screen is "active" — Flutter handles it
+based on what has been pushed and popped. If the app grows to include a
+WatchlistScreen or a settings screen, I would add more Navigator.push calls
+from wherever those screens should be reachable, and could later replace
+this simple push-based navigation with a Navigator 2.0 / named-routes setup
+if the app's navigation structure became more complex than a simple
+list-to-detail flow.
+
+2. State Management
+In the current version of the app, both HomeScreen and DetailsScreen are
+StatelessWidgets, because neither screen needs to redraw itself in response
+to changing data — they simply display the static movie list and the
+details of whichever movie was tapped. No setState() calls exist yet, since
+nothing on screen changes after it is first built. If I add the watchlist
+toggle feature, at least one of these screens would need to become a
+StatefulWidget, since tapping a bookmark icon would need to update the
+movie's isWatchlisted field and immediately redraw the icon and/or filtered
+list. This project reinforced my understanding that the choice between
+Stateless and Stateful isn't about complexity of the UI, but specifically
+about whether the widget's own data changes after the first build.
+
+3. Models
+The Movie class in lib/models/movie.dart defines the shape of a single
+movie: title, posterPath, cast, synopsis, and isWatchlisted. Using a model
+class instead of loose variables or maps means every movie object is
+guaranteed to have all five properties, since the constructor marks title,
+posterPath, cast, and synopsis as required. isWatchlisted defaults to false
+and is not final, since it is designed to be changed later. Having a single
+source of truth for what a "movie" is makes the rest of the app easier to
+reason about — HomeScreen and DetailsScreen both just expect a Movie object
+and don't need to know how that data was created or stored. If this app
+connected to a real API in the future, only the data-loading layer would
+need to change; the Movie class and the UI built around it would stay the
+same.
+
+4. Assets
+All poster images are stored locally inside assets/images/ at the project
+root, and registered in pubspec.yaml under the flutter: section's assets:
+list. Each Movie object stores its poster's relative path as a plain
+String in posterPath, and Image.asset() uses that string to load and
+display the correct file. The main challenge I ran into was making sure
+the filename typed in movies_data.dart exactly matched the real filename on
+disk, including the correct extension (.jpg vs .jpeg) — a single mismatch
+caused that specific image to fail to load while the rest of the app kept
+working normally. This taught me that asset paths are just plain strings
+Dart doesn't validate against the filesystem at compile time, so a typo
+only surfaces as a runtime error once you actually try to render that
+image.
+
+5. UX (User Experience)
+I aimed for a simple, familiar layout: a scrollable list of movies with
+small thumbnails and titles on HomeScreen, and a larger, more detailed view
+on DetailsScreen. Wrapping the DetailsScreen body in a
+SingleChildScrollView was an important UX decision, since some movies have
+longer synopses or cast lists than others, and without scrolling, that text
+could overflow off the bottom of the screen on smaller devices. Using
+ListTile for each row also gave me built-in tap feedback (a ripple effect)
+for free, which signals to the user that the row is interactive without
+writing any extra animation code. If I continued improving this app, I
+would add loading placeholders for images and clearer visual feedback (like
+a highlighted border) when a movie is added to the watchlist.
+
+6. Persistence
+Currently, this app does not persist any data between sessions — the movie
+list is hardcoded in movies_data.dart, and any changes to isWatchlisted
+(once that feature is added) would only exist while the app is running and
+would reset the next time the app launches. This is acceptable for the
+scope of this assignment, but a real-world version of this app would need a
+persistence layer, such as shared_preferences for simple flags, or a local
+database like sqflite or Hive, to save which movies a user has
+watchlisted across app restarts. Understanding the difference between
+"session-only" state (kept in memory via a StatefulWidget) and "persisted"
+state (written to disk or a database) was an important distinction this
+project helped clarify for me.
+
+7. Git Workflow
+I initialized this project as its own git repository and connected it to a
+dedicated branch on GitHub, committing after each major step: setting up
+the folder structure, adding the Movie model, adding the static movie
+data, registering assets, building HomeScreen, and adding DetailsScreen
+with navigation. Committing incrementally rather than all at once meant
+that each commit represents one understandable, working change, and gives
+a clear history of how the app was built up piece by piece. It also meant
+that if something broke partway through (such as a missing file or a typo
+in a path), I could look at exactly what changed in the most recent commit
+to help track down the cause, rather than searching through a single giant
+diff at the end.
+
+8. Future Features
+Beyond the optional watchlist toggle and WatchlistScreen, I would like to
+add a search or filter bar on HomeScreen so users can quickly find a
+specific movie by title, and star ratings so users can record their own
+opinion of a movie alongside its official cast and synopsis. Longer term,
+replacing the hardcoded movies_data.dart list with data fetched from a real
+movie API (like TMDB) would let the app show a much larger and
+up-to-date catalog instead of a fixed list of five movies, though this
+would also require adding proper error handling for failed network
+requests and loading states while data is being fetched — neither of which
+this current, purely local version of the app needs to handle.
