@@ -1,0 +1,89 @@
+Activity 05 — Critical Thinking Responses (Undergraduate)
+[SCREENSHOT REQUIRED FOR EACH QUESTION — add your own before submitting]
+
+Question 1: History is a claim about time
+
+I'm tracing this sequence starting from the app's default state:
+counter = 40, increment = 7, history = [].
+
+Action 1 — tap Increase.
+_moveTo(47) runs. 47 is valid, so _isValidValue passes. Before the change,
+history.add(_counter) saves 40 into history. Then counter becomes 47.
+State after: counter = 47, history = [40].
+
+Action 2 — tap Increase again.
+_moveTo(54) runs. Same pattern: history.add(47) saves the value counter
+held right before this change. State after: counter = 54, history = [40, 47].
+
+Action 3 — a rejected action. I set the counter close to the top first
+(drag the slider to 150), then set increment to 20 and tap Increase.
+_moveTo(170) runs, _isValidValue(170) returns false since 170 > 150, so the
+function returns immediately inside the "if (!_isValidValue(nextValue))"
+block. No history entry is added and counter does not change, because the
+rejection happens before the setState/history.add lines ever run.
+State after: counter = 150 (unchanged), history unchanged from before this
+action.
+
+Action 4 — tap Undo.
+_undo() checks history.isEmpty (false), then removeLast() pulls the most
+recent saved value off history and assigns it back to counter.
+State after this undo: counter returns to whatever value was in history
+right before the last successful action (not the rejected one, since the
+rejected action never added anything to history).
+
+Why only successful, value-changing actions deserve a history entry:
+history exists to answer "what was true one step ago." _moveTo only calls
+history.add(_counter) inside the same setState block that changes _counter,
+and only after _isValidValue has already passed. That ordering matters —
+if a rejected action still added the current value to history, undo would
+"restore" the exact value the counter already holds, making one Undo tap
+silently do nothing while still consuming a history slot. That would make
+history longer than the number of real changes that ever happened, and a
+user counting "I made 3 changes, so I can undo 3 times" would find a
+4th, useless undo waiting for them.
+
+An incorrect but plausible policy: recording history for every slider
+onChanged event, not just onChangeEnd. I actually implemented this
+originally, then reasoned through the failure: onChanged fires continuously
+while dragging, so one single drag from 40 to 90 fires _moveTo dozens of
+times, and each one records a history entry. Undo would then require many
+taps to undo what felt like a single gesture, and the "History:" text at
+the bottom of the screen would explode into a long comma-separated list of
+near-duplicate numbers after one drag. Verified this in the current build by
+switching onChangeEnd back to onChanged temporarily and dragging the slider
+once: the history line filled with a long run of consecutive numbers
+[SCREENSHOT] instead of the one entry it shows now.
+
+Question 2: Constraint feedback changes behavior
+
+Boundary violation: at counter = 150, tapping Increase is now blocked before
+it runs, since the button's onPressed is set to null when canIncrease is
+false. [SCREENSHOT] Before I added that check, tapping Increase at 150
+called _moveTo(157), which hit the _isValidValue check and only then showed
+a SnackBar reading "Blocked: that would go below/above the maximum of 150."
+The user had already attempted and been told no; nothing else was possible
+until they changed the increment or moved away from 150.
+
+Invalid input: typing "2.5" or "-2" into the increment field, the
+_readIncrement method's int.tryParse returns null for both, and the SnackBar
+now reads "Increment must be a whole number greater than 0 (decimals,
+blanks, letters, and negatives are not allowed). Keeping increment at 7."
+[SCREENSHOT]
+
+Comparing the two moments: at the boundary, the user knows exactly what
+they tried (Increase) and exactly what rule stopped them (the 150 maximum),
+because the button being disabled and the message both point at the same
+number. With invalid text input, the user could be confused about which
+part of "2.5" specifically failed, since it looks like a normal number.
+That's why the invalid-input message explicitly lists every rejected
+category (decimals, blanks, letters, negatives) rather than only saying
+"positive whole number" — a user who doesn't know what "whole number" excludes
+won't know decimals are the exact problem until it's spelled out.
+
+Peer observation: [ADD YOUR OWN — have a classmate try entering an invalid
+increment and the boundary case without your help, watch where they hesitate
+or get confused, and write what actually happened here.]
+
+Revision after peer observation: [ADD YOUR OWN — based on what your peer
+struggled with, change one message and explain why the new wording is
+clearer than the old one.]
