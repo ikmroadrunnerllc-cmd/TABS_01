@@ -34,8 +34,9 @@ the mood and the old pixels would be wrong. It should return false when
 nothing changed, because repainting would draw the exact same picture
 again and waste work.
 
-**Emulator screenshot:** _add `docs/screenshot_portrait.png` and
-`docs/screenshot_landscape.png` from the phone emulator here._
+**Emulator screenshots** (Pixel 7 emulator, Android 15, release APK):
+portrait shows the Classic face at mood 0.80. Landscape shows the same face
+with the hat and glasses on, next to the controls.
 
 ![Portrait](screenshot_portrait.png)
 ![Landscape](screenshot_landscape.png)
