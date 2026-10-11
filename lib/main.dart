@@ -41,7 +41,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final message = _calc.error ?? _calc.hint ?? '';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Calculator State Lab')),
+      // Landscape is short; give the height to the calculator instead.
+      appBar: MediaQuery.orientationOf(context) == Orientation.landscape
+          ? null
+          : AppBar(title: const Text('Calculator State Lab')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(12),
@@ -59,16 +62,24 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
+                    // Each line scales down in proportion, so all three stay
+                    // visible even in a short landscape panel.
                     children: [
-                      Text(
-                        _calc.expression,
-                        key: const Key('expression'),
-                        style: TextStyle(
-                          fontSize: 22,
-                          color: scheme.onSurfaceVariant,
+                      Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            _calc.expression,
+                            key: const Key('expression'),
+                            style: TextStyle(
+                              fontSize: 22,
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
                         ),
                       ),
                       Flexible(
+                        flex: 3,
                         child: Semantics(
                           liveRegion: true,
                           label: 'Display',
@@ -86,16 +97,21 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                           ),
                         ),
                       ),
-                      Semantics(
-                        liveRegion: true,
-                        child: Text(
-                          message,
-                          key: const Key('message'),
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: _calc.error != null
-                                ? scheme.error
-                                : scheme.onSurfaceVariant,
+                      Flexible(
+                        child: Semantics(
+                          liveRegion: true,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              message,
+                              key: const Key('message'),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: _calc.error != null
+                                    ? scheme.error
+                                    : scheme.onSurfaceVariant,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -210,12 +226,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               borderRadius: BorderRadius.circular(16),
               onTap: () => _act(onTap),
               child: Center(
-                child: Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.w500,
-                    color: fg,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w500,
+                      color: fg,
+                    ),
                   ),
                 ),
               ),

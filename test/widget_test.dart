@@ -44,4 +44,24 @@ void main() {
     await tapKeys(tester, '1 2 3 4 5 6 7 8 9 0 1 2');
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('landscape phone: display stays visible', (tester) async {
+    // Pixel-class phone held sideways (2400x1080 px at 2.625 dpr).
+    tester.view.physicalSize = const Size(2400, 1080);
+    tester.view.devicePixelRatio = 2.625;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const CalculatorApp());
+    await tapKeys(tester, '7 + =');
+    expect(tester.takeException(), isNull);
+    // getRect includes FittedBox scaling, so a squeezed-out display is ~0.
+    expect(
+      tester.getRect(find.byKey(const Key('display'))).height,
+      greaterThan(20),
+    );
+    expect(
+      tester.getRect(find.byKey(const Key('message'))).height,
+      greaterThan(8),
+    );
+  });
 }
