@@ -10,7 +10,7 @@ Flutter calculator with a **left-to-right running total** (no operator precedenc
 ```bash
 flutter pub get
 flutter run                # emulator or device
-flutter test               # 25 transition + widget tests
+flutter test               # 26 transition + widget tests
 flutter build apk          # build/app/outputs/flutter-apk/app-release.apk
 ```
 
@@ -19,7 +19,7 @@ flutter build apk          # build/app/outputs/flutter-apk/app-release.apk
 - `lib/calculator.dart` — pure Dart state machine (no Flutter imports). One method per user action.
 - `lib/main.dart` — UI. Every button calls `setState(() => calc.action())`; the UI is drawn only from calculator state.
 - `test/calculator_test.dart` — one test per transition in the contract below.
-- `test/widget_test.dart` — taps real buttons; checks small-screen layout (320×568) has no overflow.
+- `test/widget_test.dart` — taps real buttons; checks small-screen (320×568) and landscape layouts.
 
 ## State
 
