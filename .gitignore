@@ -46,12 +46,3 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
-
-# AI coding assistant tooling/config (not project source)
-.claude/
-CLAUDE.md
-.cursor/
-.codeium/
-.aider*
-.windsurfrules
-codedb.snapshot
