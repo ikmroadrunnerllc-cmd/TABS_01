@@ -1,12 +1,12 @@
-# Signup App
+# The Haunted Signup Mansion
 
 This is my Activity 10 signup form, split into three screens:
 
 | Screen | File | What it does |
 |--------|------|--------------|
-| Welcome | `lib/screens/welcome_screen.dart` | Shows a typing animation of "Welcome" and a **Get Started** button. |
+| Welcome | `lib/screens/welcome_screen.dart` | Types out "The Haunted Mansion" letter by letter and has an **Enter If You Dare** button. |
 | Sign Up | `lib/screens/signup_screen.dart` | The original name, email and password form, plus a show/hide password button, a birth date picker and a 2-second loading spinner. |
-| Success | `lib/screens/success_screen.dart` | Says "Welcome, [name]!", plays confetti and has a **Back to Home** button. |
+| Success | `lib/screens/success_screen.dart` | Says "Welcome, [name]!", plays confetti and has a **Back to the Foyer** button. |
 
 `lib/main.dart` only starts the app and opens the Welcome screen.
 
@@ -37,7 +37,7 @@ flutter analyze   # should say "No issues found!"
 2. **Sign Up → Success** uses `Navigator.pushReplacement` (`signup_screen.dart:87`). This removes the
    form from the stack, so pressing Back on the Success screen goes to Welcome, not back to the form.
    That way the form can't be submitted twice.
-3. **Back to Home** uses `Navigator.popUntil(context, (route) => route.isFirst)`
+3. **Back to the Foyer** uses `Navigator.popUntil(context, (route) => route.isFirst)`
    (`success_screen.dart:68`). It goes all the way back to the Welcome screen.
 
 ## Problems handled

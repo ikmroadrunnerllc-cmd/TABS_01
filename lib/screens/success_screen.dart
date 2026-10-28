@@ -55,7 +55,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                     ),
                   ),
                   const Text(
-                    'Your account has been created.',
+                    'Your haunted guest pass is confirmed.',
                     style: TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(height: 24),
@@ -66,7 +66,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                     ),
                     onPressed: () =>
                         Navigator.popUntil(context, (route) => route.isFirst),
-                    child: const Text('Back to Home'),
+                    child: const Text('Back to the Foyer'),
                   ),
                 ],
               ),

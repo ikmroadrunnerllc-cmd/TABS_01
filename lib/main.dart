@@ -12,7 +12,7 @@ class HauntedMansionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      title: 'Signup App',
+      title: 'The Haunted Signup Mansion',
       debugShowCheckedModeBanner: false,
       home: WelcomeScreen(),
     );

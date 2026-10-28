@@ -26,7 +26,7 @@ class WelcomeScreen extends StatelessWidget {
               totalRepeatCount: 1,
               animatedTexts: [
                 TypewriterAnimatedText(
-                  'Welcome',
+                  'The Haunted Mansion',
                   speed: const Duration(milliseconds: 120),
                   textStyle: const TextStyle(
                     fontSize: 30,
@@ -37,7 +37,7 @@ class WelcomeScreen extends StatelessWidget {
               ],
             ),
             const Text(
-              'Create an account to get started.',
+              'Sign the guest book… if you dare.',
               style: TextStyle(color: Colors.white70),
             ),
             const SizedBox(height: 24),
@@ -50,12 +50,12 @@ class WelcomeScreen extends StatelessWidget {
                   vertical: 14,
                 ),
               ),
-              // push() keeps the welcome screen on the stack so Back returns here
+              // push() keeps the foyer on the stack so Back returns here
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const SignupScreen()),
               ),
-              child: const Text('Get Started'),
+              child: const Text('Enter If You Dare'),
             ),
           ],
         ),

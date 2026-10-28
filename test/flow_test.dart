@@ -14,10 +14,10 @@ class _RouteCounter extends NavigatorObserver {
   }
 }
 
-final _join = find.text('Create Account');
+final _join = find.text('Join the Mansion');
 
 Future<void> _enterLab(WidgetTester tester) async {
-  await tester.tap(find.text('Get Started'));
+  await tester.tap(find.text('Enter If You Dare'));
   await tester.pumpAndSettle();
 }
 
@@ -165,7 +165,7 @@ void main() {
     await tester.tap(_join);
     await tester.pump(const Duration(seconds: 2));
     await tester.pump(const Duration(seconds: 1));
-    await tester.tap(find.text('Back to Home'));
+    await tester.tap(find.text('Back to the Foyer'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.byType(SuccessScreen), findsNothing);

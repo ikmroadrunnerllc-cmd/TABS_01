@@ -96,7 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Sign Up'),
+        title: const Text('The Enchanted Laboratory'),
         backgroundColor: Colors.deepOrange,
         foregroundColor: Colors.white,
       ),
@@ -107,7 +107,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             children: [
               const Text(
-                'Create Your Account',
+                'Sign the Guest Book',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -211,7 +211,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       )
                     : const Text(
-                        'Create Account',
+                        'Join the Mansion',
                         style: TextStyle(fontSize: 18),
                       ),
               ),
