@@ -246,7 +246,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     Text(_tipText, textAlign: TextAlign.center),
                     const SizedBox(height: 8),
                     const Text(
-                      'Local demo tip, no live AI',
+                      'Local demo tip',
                       style: TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                   ],
