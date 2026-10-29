@@ -50,7 +50,6 @@ class WelcomeScreen extends StatelessWidget {
                   vertical: 14,
                 ),
               ),
-              // push() keeps the foyer on the stack so Back returns here
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const SignupScreen()),

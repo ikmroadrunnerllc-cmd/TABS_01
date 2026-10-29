@@ -82,8 +82,6 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() => _submitting = true);
     await Future.delayed(const Duration(seconds: 2));
     if (!mounted) return;
-    // pushReplacement removes the signup screen from the stack, so pressing
-    // Back on the success screen can't return to the form and submit it again.
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
